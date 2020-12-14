@@ -1,0 +1,42 @@
+[
+  {
+    "tag": "h1",
+	  "textContent": "Winter Morning Poem"
+  },
+  {
+    "tag": "p",
+    "textContent": "Winter is the king of showmen,\nTurning tree stumps into snow men,\nAnd houses into birthday cakes,\nAnd spreading sugar over lakes."
+  },
+  {
+    "tag": "input",
+    "attributes": {
+      "type": "text",
+      "size": "30"
+    }
+  },
+  {
+    "tag": "textarea",
+    "attributes": {
+      "name": "comment",
+      "cols": "20",
+      "rows": "3"
+    }
+  },
+  {
+    "tag": "a",
+    "attributes": {
+      "href": ""
+    },
+    "textContent": "This link not work"
+  },
+  {
+    "tag": "video",
+    "attributes": {
+      "src": "https://player.vimeo.com/external/454440518.sd.mp4?s=ca0390b81de13f932c7731a637ea9e660d7b5384&profile_id=164"
+    }
+  },
+  {
+    "tag": "i",
+    "textContent": "Last slide by number, but not by value"
+  }
+]
