@@ -1,68 +1,139 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import Settings from './settings/settings';
+import Navigation from './navigation/navigation';
+import Pagination from './pagination/pagination';
+import CarouselElements from './carouselElements/carouselElements';
+import dataElements from '../../dataElements.json';
+import dataPictures from '../../dataImages.json';
 import './carousel.css';
 
-const Carousel = (props) => {
-  const [prevPositions] = useState([]);
-  const minWidthSlide = 360;
-  let listElements = [];
+const Carousel = () => {
+  const distanceChangeSlide = 100;
+  const [data, setData] = useState(dataPictures);
+  const [startX, setStartX] = useState(0);
+  const [offsetX, setOffsetX] = useState(0);
+  const [slideCount, setSlideCount] = useState(data.length);
+  const [mouseDown, setMouseDown] = useState(false);
+  const [multiMode, setMultiMode] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
 
-  const createElement = (element) => (
-    React.createElement(
-      element.tag,
-      {
-        ...element.attributes,
-      },
-      element.textContent ? element.textContent : null,
-    )
+  useEffect(() => {
+    if (data) {
+      setSlideCount(data.length);
+    }
+  }, [data]);
+
+  const choosePictureElements = () => {
+    setData(dataPictures);
+  };
+
+  const chooseDifferentElements = () => {
+    setData(dataElements);
+  };
+
+  const changeMultiMode = (value) => (
+    setMultiMode(value)
   );
 
-  const getListElements = () => {
-    const direction = (prevPositions[props.currentSlide] < 0);
+  const previousSlide = () => {
+    if (currentSlide <= 0) {
+      setCurrentSlide(slideCount - 1);
+    } else {
+      setCurrentSlide(currentSlide - 1);
+    }
+    setOffsetX(0);
+  };
 
-    /* The slider is 80vw */
-    const elementsOnPage = Math.floor((document.body.offsetWidth * 0.80) / minWidthSlide);
+  const nextSlide = () => {
+    if (currentSlide >= slideCount - 1) {
+      setCurrentSlide(0);
+    } else {
+      setCurrentSlide(currentSlide + 1);
+    }
+    setOffsetX(0);
+  };
 
-    listElements = props.data.map((element, index) => {
-      /* Center slide on screen relative to other slides */
-      const distance = (props.currentSlide > index)
-        ? (index + props.slideCount - props.currentSlide)
-        : (index - props.slideCount - props.currentSlide);
+  const handleStartMove = (event) => {
+    if (event.type === 'mousedown') {
+      setStartX(event.nativeEvent.clientX);
+      setMouseDown(true);
+    } else if (event.type === 'touchstart') {
+      setStartX(event.touches[0].clientX);
+    }
+  };
 
-      const position = (Math.abs(index - props.currentSlide) < Math.abs(distance))
-        ? (index - props.currentSlide) : distance;
+  const handleMove = (event) => {
+    if (mouseDown === true && event.type === 'mousemove') {
+      setOffsetX(event.clientX - startX);
+    } else if (event.changedTouches && event.type === 'touchmove') {
+      setOffsetX(event.changedTouches[0].clientX - startX);
+    }
+  };
 
-      /* Slides only move to the right or left */
-      // const position = index - props.currentSlide;
+  const handleEndMove = (event) => {
+    let difference = 0;
+    if (event.type === 'mouseup' && mouseDown === true) {
+      difference = startX - event.clientX;
+      setMouseDown(false);
+    } else if (event.type === 'mouseout' && mouseDown === true) {
+      difference = startX - event.clientX;
+      setMouseDown(false);
+    } else if (event.type === 'touchend') {
+      difference = startX - event.changedTouches[0].clientX;
+    }
 
-      const transition = ((position - prevPositions[index] > 0) === direction
-                                        && !props.offset);
+    if (difference > distanceChangeSlide) {
+      nextSlide();
+    } else if (difference < -distanceChangeSlide) {
+      previousSlide();
+    } else {
+      setOffsetX(0);
+    }
+  };
 
-      prevPositions[index] = position;
-
-      return (
-        <div
-          className="carouselElement"
-          key={index}
-          style={{
-            minWidth: `${props.multiMode ? (100 / elementsOnPage) : 100}%`,
-            maxWidth: `${props.multiMode ? (100 / elementsOnPage) : 100}%`,
-            fontSize: `${props.multiMode ? 1 : 3}rem`,
-            transition: `${transition ? 0.5 : 0}s`,
-            transform: `translateX(calc(${position * 100 + (props.multiMode ? 100 : 0)}% + ${props.offset}px))`,
-          }}
-        >
-          {createElement(element)}
-        </div>
-      );
-    });
-    return listElements;
+  const goToSlide = (x) => {
+    setCurrentSlide(x);
   };
 
   return (
-    <div className="carouselBlock">
-      { getListElements() }
+    <div className="carousel">
+      <Settings
+        changeMultiMode={changeMultiMode}
+        choosePictureElements={choosePictureElements}
+        chooseDifferentElements={chooseDifferentElements}
+      />
+      <Navigation
+        previousSlide={previousSlide}
+        nextSlide={nextSlide}
+      />
+      <section
+        className="carouselBlock"
+        onMouseDown={handleStartMove}
+        onMouseMove={handleMove}
+        onMouseUp={handleEndMove}
+        onTouchStart={handleStartMove}
+        onTouchMove={handleMove}
+        onTouchEnd={handleEndMove}
+        onMouseOut={handleEndMove}
+        onBlur={() => undefined}
+        role="grid"
+        tabIndex="0"
+      >
+        <CarouselElements
+          data={data}
+          offset={offsetX}
+          multiMode={multiMode}
+          slideCount={slideCount}
+          currentSlide={currentSlide}
+        />
+      </section>
+      <Pagination
+        goToSlide={goToSlide}
+        multiMode={multiMode}
+        slideCount={slideCount}
+        currentSlide={currentSlide}
+      />
     </div>
   );
 };
-
 export default Carousel;

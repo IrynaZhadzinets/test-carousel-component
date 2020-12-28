@@ -1,0 +1,26 @@
+.carouselElement {
+  display: flex;
+  position: absolute;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-size: 3rem;
+  color: rgb(251, 242, 235);
+}
+  
+.carouselElement p, h1-h6 {
+  max-width: 80%;
+}
+  
+.carouselElement img, video {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+  
+@media (max-width: 900px) {
+  .carouselElement p, h1-h6, a {
+    font-size: 1rem;
+  }
+}
