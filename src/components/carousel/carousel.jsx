@@ -8,16 +8,17 @@ import dataElements from '../../dataElements.json';
 import dataPictures from '../../dataImages.json';
 import './carousel.css';
 
-const getWidth = () => window.innerWidth * 0.8;
+// const getWidth = () => window.innerWidth * 0.8;
 
 const Carousel = () => {
+  const minWidthSlide = 360;
   const distanceChangeSlide = 100;
   const [data, setData] = useState(dataPictures);
   const [startX, setStartX] = useState(0);
   const [offsetX, setOffsetX] = useState(0);
   const [slideCount, setSlideCount] = useState(data.length);
   const [mouseDown, setMouseDown] = useState(false);
-  const [multiMode, setMultiMode] = useState(false);
+  const [itemsPerPage, setItemsPerPage] = useState(1);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [transition, setTransition] = useState(0.5);
   // const [slides, setSlides] = useState([lastSlide, firstSlide, secondSlide]);
@@ -37,60 +38,36 @@ const Carousel = () => {
   };
 
   const changeMultiMode = (value) => (
-    setMultiMode(value)
+    (value === true)
+      ? setItemsPerPage(Math.floor((document.body.offsetWidth * 0.80) / minWidthSlide))
+      : setItemsPerPage(1)
   );
-
-  /* const previousSlide = () => {
-    if (currentSlide <= 0) {
-      setCurrentSlide(slideCount - 1);
-    } else {
-      setCurrentSlide(currentSlide - 1);
-    }
-    setOffsetX(0);
-  };
-
-  const nextSlide = () => {
-    if (currentSlide >= slideCount - 1) {
-      setCurrentSlide(0);
-    } else {
-      setCurrentSlide(currentSlide + 1);
-    }
-    setOffsetX(0);
-  }; */
-
-  /* useEffect(() => {
-    if (translate) {
-      setOffsetX(0);
-    }
-  }, [translate]); */
 
   const nextSlide = () => {
     if (currentSlide === slideCount - 1) {
-      // setTranslate(0);
+      setCurrentSlide(0);
+    } else if (itemsPerPage !== 1 && currentSlide === slideCount - itemsPerPage) {
       setCurrentSlide(0);
     } else {
-      // setTranslate(getWidth() * (currentSlide + 1));
       setCurrentSlide(currentSlide + 1);
     }
   };
 
   const previousSlide = () => {
-    if (currentSlide === 0) {
-      // setTranslate(getWidth() * (slideCount - 1));
+    if (itemsPerPage !== 1 && currentSlide === 0) {
+      setCurrentSlide(slideCount - itemsPerPage);
+    } else if (currentSlide === 0) {
       setCurrentSlide(slideCount - 1);
     } else {
-      // setTranslate(getWidth() * (currentSlide - 1));
       setCurrentSlide(currentSlide - 1);
     }
   };
 
   const goToSlide = (x) => {
-    // setTranslate(getWidth() * x);
     setCurrentSlide(x);
   };
 
   const handleStartMove = (event) => {
-    console.log('MOVE');
     setTransition(0);
     if (event.type === 'mousedown') {
       setStartX(event.nativeEvent.clientX);
@@ -106,12 +83,9 @@ const Carousel = () => {
     } else if (event.changedTouches && event.type === 'touchmove') {
       setOffsetX(event.changedTouches[0].clientX - startX);
     }
-    // console.log('!!!');
-    // console.log(offsetX);
   };
 
   const handleEndMove = (event) => {
-    console.log('END MOVE');
     setTransition(0.5);
     let difference = 0;
     if (event.type === 'mouseup' && mouseDown === true) {
@@ -123,13 +97,11 @@ const Carousel = () => {
     } else if (event.type === 'touchend') {
       difference = startX - event.changedTouches[0].clientX;
     }
-
+    setOffsetX(0);
     if (difference > distanceChangeSlide) {
       nextSlide();
     } else if (difference < -distanceChangeSlide) {
       previousSlide();
-    } else {
-      setOffsetX(0);
     }
   };
 
@@ -170,11 +142,13 @@ const Carousel = () => {
         <CarouselContent
           currentSlide={currentSlide}
           transition={transition}
+          itemsPerPage={itemsPerPage}
           offset={offsetX}
         >
           {data.map((children, index) => (
             <CarouselElements
               index={index}
+              itemsPerPage={itemsPerPage}
             >
               {createElement(children)}
             </CarouselElements>
@@ -183,7 +157,7 @@ const Carousel = () => {
       </section>
       <Pagination
         goToSlide={goToSlide}
-        multiMode={multiMode}
+        itemsPerPage={itemsPerPage}
         slideCount={slideCount}
         currentSlide={currentSlide}
       />

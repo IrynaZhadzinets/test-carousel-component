@@ -1,16 +1,19 @@
 import React from 'react';
 import './carouselContent.css';
 
-const getWidth = () => window.innerWidth * 0.8;
+const getWidth = () => (document.querySelector('.carouselBlock')
+  ? document.querySelector('.carouselBlock').offsetWidth
+  : (window.innerWidth * 0.8));
 
-const CarouselContent = ({ currentSlide, transition, offset, children }) => {
-  console.log(currentSlide);
-  console.log(offset);
+const CarouselContent = (props) => {
+  const {
+    currentSlide, transition, offset, children, itemsPerPage,
+  } = props;
   return (
     <div
       className="carouselContent"
       style={{
-        transform: `translateX(calc(${-getWidth() * currentSlide + offset}px))`,
+        transform: `translateX(calc(${-(getWidth() / itemsPerPage) * currentSlide + offset}px))`,
         transition: `transform ease-out ${transition}s`,
       }}
     >

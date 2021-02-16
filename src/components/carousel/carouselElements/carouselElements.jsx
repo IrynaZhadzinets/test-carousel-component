@@ -1,12 +1,12 @@
 import React from 'react';
 import './carouselElements.css';
 
-const CarouselElements = ({ children, index }) => (
+const CarouselElements = ({ children, index, itemsPerPage }) => (
   <div
     className="carouselElement"
     key={index}
     style={{
-      minWidth: '100%',
+      minWidth: `${80 / itemsPerPage}vw`,
     }}
   >
     {children}

@@ -4,7 +4,7 @@
   align-items: center;
   justify-content: center;
   height: 100%;
-  font-size: 3rem;
+  font-size: 2rem;
   color: rgb(251, 242, 235);
 }
   
@@ -20,7 +20,14 @@
 }
   
 @media (max-width: 900px) {
-  .carouselElement p, h1-h6, a {
+  .carouselElement p, 
+  .carouselElement h1,
+  .carouselElement h2,
+  .carouselElement h3,
+  .carouselElement h4,
+  .carouselElement h5,
+  .carouselElement h6,
+  .carouselElement a {
     font-size: 1rem;
   }
 }
