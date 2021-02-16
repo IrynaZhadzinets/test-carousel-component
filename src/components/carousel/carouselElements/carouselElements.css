@@ -1,6 +1,5 @@
 .carouselElement {
   display: flex;
-  /* position: absolute; */
   align-items: center;
   justify-content: center;
   height: 100%;
@@ -8,7 +7,7 @@
   color: rgb(251, 242, 235);
 }
   
-.carouselElement p, h1-h6 {
+.carouselElement p {
   max-width: 80%;
 }
   

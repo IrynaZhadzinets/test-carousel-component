@@ -8,10 +8,10 @@ import dataElements from '../../dataElements.json';
 import dataPictures from '../../dataImages.json';
 import './carousel.css';
 
-// const getWidth = () => window.innerWidth * 0.8;
-
 const Carousel = () => {
   const minWidthSlide = 360;
+  // carousel block is 80vw wide
+  const carouselBlockSize = 0.8;
   const distanceChangeSlide = 100;
 
   const [startX, setStartX] = useState(0);
@@ -40,13 +40,14 @@ const Carousel = () => {
 
   const changeMultiMode = (value) => (
     (value === true)
-      ? setItemsPerPage(Math.floor((document.body.offsetWidth * 0.80) / minWidthSlide))
+      ? setItemsPerPage(Math.floor((document.body.offsetWidth * carouselBlockSize) / minWidthSlide))
       : setItemsPerPage(1)
   );
 
   const nextSlide = () => {
     if (currentSlide === slideCount - 1) {
       setCurrentSlide(0);
+    // when multi-mode is enabled that empty items aren`t displayed
     } else if (itemsPerPage !== 1 && currentSlide === slideCount - itemsPerPage) {
       setCurrentSlide(0);
     } else {
@@ -55,6 +56,7 @@ const Carousel = () => {
   };
 
   const previousSlide = () => {
+    // when multi-mode is enabled that empty items aren`t displayed
     if (itemsPerPage !== 1 && currentSlide === 0) {
       setCurrentSlide(slideCount - itemsPerPage);
     } else if (currentSlide === 0) {
@@ -89,6 +91,7 @@ const Carousel = () => {
   const handleEndMove = (event) => {
     setTransition(0.5);
     let difference = 0;
+
     if (event.type === 'mouseup' && mouseDown === true) {
       difference = startX - event.clientX;
       setMouseDown(false);
@@ -98,7 +101,9 @@ const Carousel = () => {
     } else if (event.type === 'touchend') {
       difference = startX - event.changedTouches[0].clientX;
     }
+
     setOffsetX(0);
+
     if (difference > distanceChangeSlide) {
       nextSlide();
     } else if (difference < -distanceChangeSlide) {
@@ -142,8 +147,8 @@ const Carousel = () => {
       >
         <CarouselContent
           currentSlide={currentSlide}
-          transition={transition}
           itemsPerPage={itemsPerPage}
+          transition={transition}
           offset={offsetX}
         >
           {data.map((children, index) => (
