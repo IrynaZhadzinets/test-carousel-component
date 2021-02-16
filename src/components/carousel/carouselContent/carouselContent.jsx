@@ -3,7 +3,7 @@ import './carouselContent.css';
 
 const getWidth = () => window.innerWidth * 0.8;
 
-const CarouselContent = ({ currentSlide, offset, children }) => {
+const CarouselContent = ({ currentSlide, transition, offset, children }) => {
   console.log(currentSlide);
   console.log(offset);
   return (
@@ -11,6 +11,7 @@ const CarouselContent = ({ currentSlide, offset, children }) => {
       className="carouselContent"
       style={{
         transform: `translateX(calc(${-getWidth() * currentSlide + offset}px))`,
+        transition: `transform ease-out ${transition}s`,
       }}
     >
       {children}

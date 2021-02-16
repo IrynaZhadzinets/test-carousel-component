@@ -19,7 +19,7 @@ const Carousel = () => {
   const [mouseDown, setMouseDown] = useState(false);
   const [multiMode, setMultiMode] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [translate, setTranslate] = useState(0);
+  const [transition, setTransition] = useState(0.5);
   // const [slides, setSlides] = useState([lastSlide, firstSlide, secondSlide]);
 
   useEffect(() => {
@@ -58,38 +58,40 @@ const Carousel = () => {
     setOffsetX(0);
   }; */
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (translate) {
       setOffsetX(0);
     }
-  }, [translate]);
+  }, [translate]); */
 
   const nextSlide = () => {
     if (currentSlide === slideCount - 1) {
-      setTranslate(0);
+      // setTranslate(0);
       setCurrentSlide(0);
     } else {
-      setTranslate(getWidth() * (currentSlide + 1));
+      // setTranslate(getWidth() * (currentSlide + 1));
       setCurrentSlide(currentSlide + 1);
     }
   };
 
   const previousSlide = () => {
     if (currentSlide === 0) {
-      setTranslate(getWidth() * (slideCount - 1));
+      // setTranslate(getWidth() * (slideCount - 1));
       setCurrentSlide(slideCount - 1);
     } else {
-      setTranslate(getWidth() * (currentSlide - 1));
+      // setTranslate(getWidth() * (currentSlide - 1));
       setCurrentSlide(currentSlide - 1);
     }
   };
 
   const goToSlide = (x) => {
-    setTranslate(getWidth() * x);
+    // setTranslate(getWidth() * x);
     setCurrentSlide(x);
   };
 
   const handleStartMove = (event) => {
+    console.log('MOVE');
+    setTransition(0);
     if (event.type === 'mousedown') {
       setStartX(event.nativeEvent.clientX);
       setMouseDown(true);
@@ -104,11 +106,13 @@ const Carousel = () => {
     } else if (event.changedTouches && event.type === 'touchmove') {
       setOffsetX(event.changedTouches[0].clientX - startX);
     }
-    console.log('!!!');
-    console.log(offsetX);
+    // console.log('!!!');
+    // console.log(offsetX);
   };
 
   const handleEndMove = (event) => {
+    console.log('END MOVE');
+    setTransition(0.5);
     let difference = 0;
     if (event.type === 'mouseup' && mouseDown === true) {
       difference = startX - event.clientX;
@@ -165,6 +169,7 @@ const Carousel = () => {
       >
         <CarouselContent
           currentSlide={currentSlide}
+          transition={transition}
           offset={offsetX}
         >
           {data.map((children, index) => (
