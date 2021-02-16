@@ -13,18 +13,19 @@ import './carousel.css';
 const Carousel = () => {
   const minWidthSlide = 360;
   const distanceChangeSlide = 100;
-  const [data, setData] = useState(dataPictures);
+
   const [startX, setStartX] = useState(0);
   const [offsetX, setOffsetX] = useState(0);
-  const [slideCount, setSlideCount] = useState(data.length);
+  const [transition, setTransition] = useState(0.5);
   const [mouseDown, setMouseDown] = useState(false);
   const [itemsPerPage, setItemsPerPage] = useState(1);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [transition, setTransition] = useState(0.5);
-  // const [slides, setSlides] = useState([lastSlide, firstSlide, secondSlide]);
+  const [data, setData] = useState(dataPictures);
+  const [slideCount, setSlideCount] = useState(data.length);
 
   useEffect(() => {
     if (data) {
+      setCurrentSlide(0);
       setSlideCount(data.length);
     }
   }, [data]);
