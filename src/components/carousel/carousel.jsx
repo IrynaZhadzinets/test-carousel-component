@@ -2,10 +2,13 @@ import React, { useState, useEffect } from 'react';
 import Settings from './settings/settings';
 import Navigation from './navigation/navigation';
 import Pagination from './pagination/pagination';
+import CarouselContent from './carouselContent/carouselContent';
 import CarouselElements from './carouselElements/carouselElements';
 import dataElements from '../../dataElements.json';
 import dataPictures from '../../dataImages.json';
 import './carousel.css';
+
+const getWidth = () => window.innerWidth * 0.8;
 
 const Carousel = () => {
   const distanceChangeSlide = 100;
@@ -16,6 +19,8 @@ const Carousel = () => {
   const [mouseDown, setMouseDown] = useState(false);
   const [multiMode, setMultiMode] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [translate, setTranslate] = useState(0);
+  // const [slides, setSlides] = useState([lastSlide, firstSlide, secondSlide]);
 
   useEffect(() => {
     if (data) {
@@ -35,7 +40,7 @@ const Carousel = () => {
     setMultiMode(value)
   );
 
-  const previousSlide = () => {
+  /* const previousSlide = () => {
     if (currentSlide <= 0) {
       setCurrentSlide(slideCount - 1);
     } else {
@@ -51,6 +56,37 @@ const Carousel = () => {
       setCurrentSlide(currentSlide + 1);
     }
     setOffsetX(0);
+  }; */
+
+  useEffect(() => {
+    if (translate) {
+      setOffsetX(0);
+    }
+  }, [translate]);
+
+  const nextSlide = () => {
+    if (currentSlide === slideCount - 1) {
+      setTranslate(0);
+      setCurrentSlide(0);
+    } else {
+      setTranslate(getWidth() * (currentSlide + 1));
+      setCurrentSlide(currentSlide + 1);
+    }
+  };
+
+  const previousSlide = () => {
+    if (currentSlide === 0) {
+      setTranslate(getWidth() * (slideCount - 1));
+      setCurrentSlide(slideCount - 1);
+    } else {
+      setTranslate(getWidth() * (currentSlide - 1));
+      setCurrentSlide(currentSlide - 1);
+    }
+  };
+
+  const goToSlide = (x) => {
+    setTranslate(getWidth() * x);
+    setCurrentSlide(x);
   };
 
   const handleStartMove = (event) => {
@@ -68,6 +104,8 @@ const Carousel = () => {
     } else if (event.changedTouches && event.type === 'touchmove') {
       setOffsetX(event.changedTouches[0].clientX - startX);
     }
+    console.log('!!!');
+    console.log(offsetX);
   };
 
   const handleEndMove = (event) => {
@@ -91,9 +129,15 @@ const Carousel = () => {
     }
   };
 
-  const goToSlide = (x) => {
-    setCurrentSlide(x);
-  };
+  const createElement = (element) => (
+    React.createElement(
+      element.tag,
+      {
+        ...element.attributes,
+      },
+      element.textContent ? element.textContent : null,
+    )
+  );
 
   return (
     <div className="carousel">
@@ -119,13 +163,18 @@ const Carousel = () => {
         role="grid"
         tabIndex="0"
       >
-        <CarouselElements
-          data={data}
-          offset={offsetX}
-          multiMode={multiMode}
-          slideCount={slideCount}
+        <CarouselContent
           currentSlide={currentSlide}
-        />
+          offset={offsetX}
+        >
+          {data.map((children, index) => (
+            <CarouselElements
+              index={index}
+            >
+              {createElement(children)}
+            </CarouselElements>
+          ))}
+        </CarouselContent>
       </section>
       <Pagination
         goToSlide={goToSlide}

@@ -1,0 +1,5 @@
+.carouselContent {
+  display: flex;
+  height: 100%;
+  transition: transform ease-out 0.5s;
+}

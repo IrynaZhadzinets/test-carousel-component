@@ -1,6 +1,6 @@
 .carouselElement {
   display: flex;
-  position: absolute;
+  /* position: absolute; */
   align-items: center;
   justify-content: center;
   height: 100%;
