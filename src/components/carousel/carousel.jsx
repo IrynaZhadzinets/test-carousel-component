@@ -1,48 +1,23 @@
 import React, { useState } from 'react';
-import Settings from './settings/settings';
 import Navigation from './navigation/navigation';
 import Pagination from './pagination/pagination';
 import CarouselContent from './carouselContent/carouselContent';
 import CarouselElements from './carouselElements/carouselElements';
-// import dataElements from '../../dataElements.json';
-// import dataPictures from '../../dataImages.json';
 import './carousel.css';
 
 const Carousel = ({ children }) => {
-  const minWidthSlide = 360;
+  // const minWidthSlide = 360;
   // carousel block is 80vw wide
-  const carouselBlockSize = 0.8;
+  // const carouselBlockSize = 0.8;
   const distanceChangeSlide = 100;
 
   const [startX, setStartX] = useState(0);
   const [offsetX, setOffsetX] = useState(0);
   const [transition, setTransition] = useState(0.5);
   const [mouseDown, setMouseDown] = useState(false);
-  const [itemsPerPage, setItemsPerPage] = useState(1);
+  const [itemsPerPage] = useState(1);
   const [currentSlide, setCurrentSlide] = useState(0);
-  // const [data, setData] = useState(dataPictures);
   const [slideCount] = useState(children.length);
-
-  /* useEffect(() => {
-    if (data) {
-      setCurrentSlide(0);
-      setSlideCount(data.length);
-    }
-  }, [data]);
-
-  const choosePictureElements = () => {
-    setData(dataPictures);
-  };
-
-  const chooseDifferentElements = () => {
-    setData(dataElements);
-  }; */
-
-  const changeMultiMode = (value) => (
-    (value === true)
-      ? setItemsPerPage(Math.floor((document.body.offsetWidth * carouselBlockSize) / minWidthSlide))
-      : setItemsPerPage(1)
-  );
 
   const nextSlide = () => {
     if (currentSlide === slideCount - 1) {
@@ -111,35 +86,8 @@ const Carousel = ({ children }) => {
     }
   };
 
-  /* const createElement = (element) => (
-    React.createElement(
-      element.tag,
-      {
-        ...element.attributes,
-      },
-      element.textContent ? element.textContent : null,
-    )
-  ); */
-
-  /* const childData = children.map((child, index) => (
-    <div
-      className="carouselElement"
-      key={index}
-      style={{
-        minWidth: `${carouselBlockSize / itemsPerPage}vw`,
-      }}
-    >
-      {child}
-    </div>
-  )); */
-
   return (
     <div className="carousel">
-      <Settings
-        changeMultiMode={changeMultiMode}
-        // choosePictureElements={choosePictureElements}
-        // chooseDifferentElements={chooseDifferentElements}
-      />
       <Navigation
         previousSlide={previousSlide}
         nextSlide={nextSlide}
@@ -183,11 +131,3 @@ const Carousel = ({ children }) => {
   );
 };
 export default Carousel;
-/* {data.map((children, index) => (
-            <CarouselElements
-              index={index}
-              itemsPerPage={itemsPerPage}
-            >
-              {createElement(children)}
-            </CarouselElements>
-          ))} */
