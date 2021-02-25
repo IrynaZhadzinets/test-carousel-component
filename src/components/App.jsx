@@ -7,7 +7,8 @@ const App = () => (
   // the component are connected here
   // (for example footer and header)
   <Carousel
-    multipleSlides
+    pagination
+    navigation
   >
     <h1>New</h1>
     <h1>Type</h1>

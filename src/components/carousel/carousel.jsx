@@ -5,7 +5,10 @@ import CarouselContent from './carouselContent/carouselContent';
 import CarouselElements from './carouselElements/carouselElements';
 import './carousel.css';
 
-const Carousel = ({ children, multipleSlides }) => {
+const Carousel = (props) => {
+  const {
+    children, multipleSlides, pagination, navigation,
+  } = props;
   const minWidthSlide = 360;
   // carousel block is 80vw wide
   const carouselBlockSize = 0.8;
@@ -19,6 +22,8 @@ const Carousel = ({ children, multipleSlides }) => {
   const [screenWidth, setScreenWidth] = useState(document.body.offsetWidth);
   const slideCount = children.length;
   const multiMode = (multipleSlides === true);
+  const showPagination = (pagination === true);
+  const showNavigation = (navigation === true);
   const [itemsPerPage, setItemsPerPage] = useState(1);
 
   useEffect(() => {
@@ -111,6 +116,7 @@ const Carousel = ({ children, multipleSlides }) => {
   return (
     <div className="carousel">
       <Navigation
+        showNavigation={showNavigation}
         previousSlide={previousSlide}
         nextSlide={nextSlide}
       />
@@ -144,8 +150,8 @@ const Carousel = ({ children, multipleSlides }) => {
         </CarouselContent>
       </section>
       <Pagination
+        showPagination={showPagination}
         goToSlide={goToSlide}
-        itemsPerPage={itemsPerPage}
         slideCount={slideCount}
         currentSlide={currentSlide}
       />
