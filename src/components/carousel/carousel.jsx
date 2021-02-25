@@ -19,17 +19,16 @@ const Carousel = ({ children, multipleSlides }) => {
   const [screenWidth, setScreenWidth] = useState(document.body.offsetWidth);
   const slideCount = children.length;
   const multiMode = (multipleSlides === true);
-  const [itemsPerPage, setItemsPerPage] = useState((multiMode)
-    ? Math.floor((screenWidth * carouselBlockSize) / minWidthSlide)
-    : 1);
-  /* ? (Math.floor((screenWidth * carouselBlockSize) / minWidthSlide) > slideCount
-    ? Math.floor((screenWidth * carouselBlockSize) / minWidthSlide)
-    : slideCount)
-    : 1); */
+  const [itemsPerPage, setItemsPerPage] = useState(1);
 
   useEffect(() => {
     if (multiMode) {
-      setItemsPerPage(Math.floor((screenWidth * carouselBlockSize) / minWidthSlide));
+      const maxItemsPerPage = Math.floor((screenWidth * carouselBlockSize) / minWidthSlide);
+      if (maxItemsPerPage < slideCount) {
+        setItemsPerPage(maxItemsPerPage);
+      } else {
+        setItemsPerPage(slideCount);
+      }
     }
   }, [screenWidth]);
 
