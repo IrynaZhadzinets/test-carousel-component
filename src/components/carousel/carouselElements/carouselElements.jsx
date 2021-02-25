@@ -1,13 +1,13 @@
 import React from 'react';
 import './carouselElements.css';
 
-const CarouselElements = ({ children, index, itemsPerPage }) => {
+const CarouselElements = ({ children, itemsPerPage }) => {
   // carousel block is 80vw wide
   const carouselBlockSize = 80;
   return (
     <div
       className="carouselElement"
-      key={index}
+      key={children.key}
       style={{
         minWidth: `${carouselBlockSize / itemsPerPage}vw`,
       }}

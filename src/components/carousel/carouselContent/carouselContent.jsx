@@ -1,7 +1,8 @@
 import React from 'react';
 import './carouselContent.css';
 
-const getWidth = () => ((window.innerWidth * 0.8));
+// carousel block is 80vw wide
+const getWidth = () => (window.innerWidth * 0.8);
 
 const CarouselContent = (props) => {
   const {
