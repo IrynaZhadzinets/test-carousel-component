@@ -1,23 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navigation from './navigation/navigation';
 import Pagination from './pagination/pagination';
 import CarouselContent from './carouselContent/carouselContent';
 import CarouselElements from './carouselElements/carouselElements';
 import './carousel.css';
 
-const Carousel = ({ children }) => {
-  // const minWidthSlide = 360;
+const Carousel = ({ children, multipleSlides }) => {
+  const minWidthSlide = 360;
   // carousel block is 80vw wide
-  // const carouselBlockSize = 0.8;
+  const carouselBlockSize = 0.8;
   const distanceChangeSlide = 100;
 
   const [startX, setStartX] = useState(0);
   const [offsetX, setOffsetX] = useState(0);
   const [transition, setTransition] = useState(0.5);
   const [mouseDown, setMouseDown] = useState(false);
-  const [itemsPerPage] = useState(1);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [slideCount] = useState(children.length);
+  const [screenWidth, setScreenWidth] = useState(document.body.offsetWidth);
+  const slideCount = children.length;
+  const multiMode = (multipleSlides === true);
+  const [itemsPerPage, setItemsPerPage] = useState((multiMode)
+    ? Math.floor((screenWidth * carouselBlockSize) / minWidthSlide)
+    : 1);
+  /* ? (Math.floor((screenWidth * carouselBlockSize) / minWidthSlide) > slideCount
+    ? Math.floor((screenWidth * carouselBlockSize) / minWidthSlide)
+    : slideCount)
+    : 1); */
+
+  useEffect(() => {
+    if (multiMode) {
+      setItemsPerPage(Math.floor((screenWidth * carouselBlockSize) / minWidthSlide));
+    }
+  }, [screenWidth]);
+
+  useEffect(() => {
+    function handleResize() {
+      setScreenWidth(document.body.offsetWidth);
+    }
+    window.addEventListener('resize', handleResize);
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const nextSlide = () => {
     if (currentSlide === slideCount - 1) {

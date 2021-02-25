@@ -6,19 +6,15 @@ const App = () => (
   // If we want to extend the program,
   // the component are connected here
   // (for example footer and header)
-  <Carousel>
-    <div>
-      <p>Any Html content being passed</p>
-    </div>
-    <div>
-      <h1>Content</h1>
-    </div>
-    <div>
-      <h1>Some Content</h1>
-    </div>
-    <div>
-      <h1>Random Content</h1>
-    </div>
+  <Carousel
+    multipleSlides
+  >
+    <h1>New</h1>
+    <h1>Type</h1>
+    <h1>Data</h1>
+    <h1>New</h1>
+    <h1>Type</h1>
+    <h1>Data</h1>
   </Carousel>
 );
 
