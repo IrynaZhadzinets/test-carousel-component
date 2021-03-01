@@ -2,8 +2,10 @@ import React from 'react';
 import './pagination.css';
 
 const Pagination = (props) => {
-  const { currentSlide, slideCount, itemsPerPage } = props;
-  if (itemsPerPage !== 1) return 0;
+  const {
+    showPagination, multiMode, currentSlide, slideCount,
+  } = props;
+  if (!showPagination || multiMode) return '';
   const dotsList = [...Array(slideCount).keys()]
     .map((currentValue, index) => (
       (currentSlide === currentValue)

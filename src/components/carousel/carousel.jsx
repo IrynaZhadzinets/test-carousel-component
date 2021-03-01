@@ -1,48 +1,51 @@
 import React, { useState, useEffect } from 'react';
-import Settings from './settings/settings';
 import Navigation from './navigation/navigation';
 import Pagination from './pagination/pagination';
 import CarouselContent from './carouselContent/carouselContent';
 import CarouselElements from './carouselElements/carouselElements';
-import dataElements from '../../dataElements.json';
-import dataPictures from '../../dataImages.json';
 import './carousel.css';
 
-const Carousel = () => {
+const Carousel = (props) => {
+  const {
+    children, multipleSlides, pagination, navigation, widthSlider, heightSlider,
+  } = props;
   const minWidthSlide = 360;
-  // carousel block is 80vw wide
-  const carouselBlockSize = 0.8;
   const distanceChangeSlide = 100;
 
   const [startX, setStartX] = useState(0);
   const [offsetX, setOffsetX] = useState(0);
   const [transition, setTransition] = useState(0.5);
   const [mouseDown, setMouseDown] = useState(false);
-  const [itemsPerPage, setItemsPerPage] = useState(1);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [data, setData] = useState(dataPictures);
-  const [slideCount, setSlideCount] = useState(data.length);
+  const [itemsPerPage, setItemsPerPage] = useState(1);
+  const [screenWidth, setScreenWidth] = useState(document.body.offsetWidth);
+
+  const slideCount = children.length;
+  const width = (widthSlider || '80');
+  const height = (heightSlider || '80');
+  const multiMode = (multipleSlides === true);
+  const showPagination = (pagination === true);
+  const showNavigation = (navigation === true);
 
   useEffect(() => {
-    if (data) {
-      setCurrentSlide(0);
-      setSlideCount(data.length);
+    if (multiMode) {
+      const maxItemsPerPage = Math.floor((screenWidth * (width / 100)) / minWidthSlide);
+      if (maxItemsPerPage < slideCount) {
+        setItemsPerPage(maxItemsPerPage);
+      } else {
+        setItemsPerPage(slideCount);
+      }
     }
-  }, [data]);
+  }, [screenWidth]);
 
-  const choosePictureElements = () => {
-    setData(dataPictures);
-  };
+  useEffect(() => {
+    function handleResize() {
+      setScreenWidth(document.body.offsetWidth);
+    }
+    window.addEventListener('resize', handleResize);
 
-  const chooseDifferentElements = () => {
-    setData(dataElements);
-  };
-
-  const changeMultiMode = (value) => (
-    (value === true)
-      ? setItemsPerPage(Math.floor((document.body.offsetWidth * carouselBlockSize) / minWidthSlide))
-      : setItemsPerPage(1)
-  );
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const nextSlide = () => {
     if (currentSlide === slideCount - 1) {
@@ -111,63 +114,53 @@ const Carousel = () => {
     }
   };
 
-  const createElement = (element) => (
-    React.createElement(
-      element.tag,
-      {
-        ...element.attributes,
-      },
-      element.textContent ? element.textContent : null,
-    )
-  );
-
   return (
-    <div className="carousel">
-      <Settings
-        changeMultiMode={changeMultiMode}
-        choosePictureElements={choosePictureElements}
-        chooseDifferentElements={chooseDifferentElements}
-      />
+    <section
+      className="carouselContainer"
+      onMouseDown={handleStartMove}
+      onMouseMove={handleMove}
+      onMouseUp={handleEndMove}
+      onTouchStart={handleStartMove}
+      onTouchMove={handleMove}
+      onTouchEnd={handleEndMove}
+      onMouseOut={handleEndMove}
+      onBlur={() => undefined}
+      role="grid"
+      tabIndex="0"
+      style={{
+        width: `${width}vw`,
+        height: `${height}vh`,
+      }}
+    >
       <Navigation
+        showNavigation={showNavigation}
         previousSlide={previousSlide}
         nextSlide={nextSlide}
       />
-      <section
-        className="carouselBlock"
-        onMouseDown={handleStartMove}
-        onMouseMove={handleMove}
-        onMouseUp={handleEndMove}
-        onTouchStart={handleStartMove}
-        onTouchMove={handleMove}
-        onTouchEnd={handleEndMove}
-        onMouseOut={handleEndMove}
-        onBlur={() => undefined}
-        role="grid"
-        tabIndex="0"
-      >
-        <CarouselContent
-          currentSlide={currentSlide}
-          itemsPerPage={itemsPerPage}
-          transition={transition}
-          offset={offsetX}
-        >
-          {data.map((children, index) => (
-            <CarouselElements
-              index={index}
-              itemsPerPage={itemsPerPage}
-            >
-              {createElement(children)}
-            </CarouselElements>
-          ))}
-        </CarouselContent>
-      </section>
-      <Pagination
-        goToSlide={goToSlide}
+      <CarouselContent
+        currentSlide={currentSlide}
         itemsPerPage={itemsPerPage}
+        transition={transition}
+        width={width}
+        offset={offsetX}
+      >
+        {children.map((child) => (
+          <CarouselElements
+            itemsPerPage={itemsPerPage}
+            width={width}
+          >
+            {child}
+          </CarouselElements>
+        ))}
+      </CarouselContent>
+      <Pagination
+        showPagination={showPagination}
+        multiMode={multiMode}
+        goToSlide={goToSlide}
         slideCount={slideCount}
         currentSlide={currentSlide}
       />
-    </div>
+    </section>
   );
 };
 export default Carousel;

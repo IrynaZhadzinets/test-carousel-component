@@ -1,12 +1,11 @@
 import React from 'react';
 import './carouselContent.css';
 
-const getWidth = () => ((window.innerWidth * 0.8));
-
 const CarouselContent = (props) => {
   const {
-    currentSlide, transition, offset, children, itemsPerPage,
+    currentSlide, transition, offset, children, itemsPerPage, width,
   } = props;
+  const getWidth = () => (window.innerWidth * (width / 100));
   return (
     <div
       className="carouselContent"
