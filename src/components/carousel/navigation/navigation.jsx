@@ -3,7 +3,7 @@ import './navigation.css';
 
 const Navigation = (props) => {
   const { showNavigation, previousSlide, nextSlide } = props;
-  if (!showNavigation) return 0;
+  if (!showNavigation) return '';
   return (
     <nav className="navigation">
       <button type="button" className="previousSlide" onClick={previousSlide}>

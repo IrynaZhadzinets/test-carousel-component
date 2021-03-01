@@ -26,7 +26,8 @@
   .carouselElement h4,
   .carouselElement h5,
   .carouselElement h6,
-  .carouselElement a {
+  .carouselElement a,
+  .carouselElement i {
     font-size: 1rem;
   }
 }

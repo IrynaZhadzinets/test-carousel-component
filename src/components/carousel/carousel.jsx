@@ -17,14 +17,15 @@ const Carousel = (props) => {
   const [transition, setTransition] = useState(0.5);
   const [mouseDown, setMouseDown] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [itemsPerPage, setItemsPerPage] = useState(1);
   const [screenWidth, setScreenWidth] = useState(document.body.offsetWidth);
+
   const slideCount = children.length;
+  const width = (widthSlider || '80');
+  const height = (heightSlider || '80');
   const multiMode = (multipleSlides === true);
   const showPagination = (pagination === true);
   const showNavigation = (navigation === true);
-  const width = (widthSlider || '80');
-  const height = (heightSlider || '50');
-  const [itemsPerPage, setItemsPerPage] = useState(1);
 
   useEffect(() => {
     if (multiMode) {
@@ -143,11 +144,10 @@ const Carousel = (props) => {
         width={width}
         offset={offsetX}
       >
-        {children.map((child, index) => (
+        {children.map((child) => (
           <CarouselElements
-            index={index}
-            width={width}
             itemsPerPage={itemsPerPage}
+            width={width}
           >
             {child}
           </CarouselElements>

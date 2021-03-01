@@ -5,7 +5,7 @@ const Pagination = (props) => {
   const {
     showPagination, multiMode, currentSlide, slideCount,
   } = props;
-  if (!showPagination || multiMode) return 0;
+  if (!showPagination || multiMode) return '';
   const dotsList = [...Array(slideCount).keys()]
     .map((currentValue, index) => (
       (currentSlide === currentValue)
