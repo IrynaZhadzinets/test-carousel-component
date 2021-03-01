@@ -7,11 +7,9 @@ import './carousel.css';
 
 const Carousel = (props) => {
   const {
-    children, multipleSlides, pagination, navigation,
+    children, multipleSlides, pagination, navigation, widthSlider, heightSlider,
   } = props;
   const minWidthSlide = 360;
-  // carousel block is 80vw wide
-  const carouselBlockSize = 0.8;
   const distanceChangeSlide = 100;
 
   const [startX, setStartX] = useState(0);
@@ -24,11 +22,13 @@ const Carousel = (props) => {
   const multiMode = (multipleSlides === true);
   const showPagination = (pagination === true);
   const showNavigation = (navigation === true);
+  const width = (widthSlider || '80');
+  const height = (heightSlider || '50');
   const [itemsPerPage, setItemsPerPage] = useState(1);
 
   useEffect(() => {
     if (multiMode) {
-      const maxItemsPerPage = Math.floor((screenWidth * carouselBlockSize) / minWidthSlide);
+      const maxItemsPerPage = Math.floor((screenWidth * (width / 100)) / minWidthSlide);
       if (maxItemsPerPage < slideCount) {
         setItemsPerPage(maxItemsPerPage);
       } else {
@@ -114,48 +114,53 @@ const Carousel = (props) => {
   };
 
   return (
-    <div className="carousel">
+    <section
+      className="carouselContainer"
+      onMouseDown={handleStartMove}
+      onMouseMove={handleMove}
+      onMouseUp={handleEndMove}
+      onTouchStart={handleStartMove}
+      onTouchMove={handleMove}
+      onTouchEnd={handleEndMove}
+      onMouseOut={handleEndMove}
+      onBlur={() => undefined}
+      role="grid"
+      tabIndex="0"
+      style={{
+        width: `${width}vw`,
+        height: `${height}vh`,
+      }}
+    >
       <Navigation
         showNavigation={showNavigation}
         previousSlide={previousSlide}
         nextSlide={nextSlide}
       />
-      <section
-        className="carouselBlock"
-        onMouseDown={handleStartMove}
-        onMouseMove={handleMove}
-        onMouseUp={handleEndMove}
-        onTouchStart={handleStartMove}
-        onTouchMove={handleMove}
-        onTouchEnd={handleEndMove}
-        onMouseOut={handleEndMove}
-        onBlur={() => undefined}
-        role="grid"
-        tabIndex="0"
+      <CarouselContent
+        currentSlide={currentSlide}
+        itemsPerPage={itemsPerPage}
+        transition={transition}
+        width={width}
+        offset={offsetX}
       >
-        <CarouselContent
-          currentSlide={currentSlide}
-          itemsPerPage={itemsPerPage}
-          transition={transition}
-          offset={offsetX}
-        >
-          {children.map((child, index) => (
-            <CarouselElements
-              index={index}
-              itemsPerPage={itemsPerPage}
-            >
-              {child}
-            </CarouselElements>
-          ))}
-        </CarouselContent>
-      </section>
+        {children.map((child, index) => (
+          <CarouselElements
+            index={index}
+            width={width}
+            itemsPerPage={itemsPerPage}
+          >
+            {child}
+          </CarouselElements>
+        ))}
+      </CarouselContent>
       <Pagination
         showPagination={showPagination}
+        multiMode={multiMode}
         goToSlide={goToSlide}
         slideCount={slideCount}
         currentSlide={currentSlide}
       />
-    </div>
+    </section>
   );
 };
 export default Carousel;

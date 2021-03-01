@@ -1,18 +1,16 @@
-.carouselBlock {
+.carouselContainer {
   display: flex;
-  position: absolute;
+  position: relative;
   left: 0;
   top: 0;
   bottom: 0;
   right: 0;
-  width: 80vw;
-  height: 70vh;
-  margin: auto;
+  margin: 20px auto;
   overflow: hidden;
   background: radial-gradient(55% 110%, rgb(251, 242, 235), rgb(53, 42, 59));
   box-shadow: 0 0 10px 5px rgba(53, 42, 59, 1);
 }
 
-.carouselBlock:focus {
+.carouselContainer:focus {
   cursor: grabbing;
 }
